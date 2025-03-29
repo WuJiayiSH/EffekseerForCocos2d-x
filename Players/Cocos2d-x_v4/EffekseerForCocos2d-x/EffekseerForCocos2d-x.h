@@ -84,8 +84,12 @@ private:
 	Effect* effect_ = nullptr;
 	::Effekseer::Handle handle = -1;
 
+#if COCOS2D_VERSION >= 0x00040000
 	cocos2d::CallbackCommand renderCommand;
-	
+#else
+	cocos2d::CustomCommand renderCommand;
+#endif
+
 	void beforeRender(EffekseerRenderer::RendererRef, Effekseer::RefPtr<EffekseerRenderer::CommandList>);
     void afterRender(EffekseerRenderer::RendererRef, Effekseer::RefPtr<EffekseerRenderer::CommandList>);
 

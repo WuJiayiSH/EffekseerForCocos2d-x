@@ -4,7 +4,9 @@
 #include "../../EffekseerRendererCommon/ModelLoader.h"
 #include "../../EffekseerRendererGL/EffekseerRendererGL.h"
 #include "../../EffekseerRendererGL/EffekseerRenderer/EffekseerRendererGL.MaterialLoader.h"
+#if COCOS2D_VERSION >= 0x00040000
 #include "renderer/backend/opengl/TextureGL.h"
+#endif
 
 namespace efk {
 
@@ -142,11 +144,17 @@ Effekseer::ModelLoaderRef CreateModelLoader(Effekseer::FileInterfaceRef effectFi
 
 void UpdateTextureData(::Effekseer::TextureRef textureData, cocos2d::Texture2D* texture)
 {
+#if COCOS2D_VERSION >= 0x00040000
 	auto textureGL = static_cast<cocos2d::backend::Texture2DGL*>(texture->getBackendTexture());
 
 	auto device = EffekseerGraphicsDevice::create().DownCast<::EffekseerRendererGL::Backend::GraphicsDevice>();
 
 	auto backend = device->CreateTexture(textureGL->getHandler(), texture->hasMipmaps(), []() -> void {});
+#else
+	auto device = EffekseerGraphicsDevice::create().DownCast<::EffekseerRendererGL::Backend::GraphicsDevice>();
+
+	auto backend = device->CreateTexture(texture->getName(), texture->hasMipmaps(), []() -> void {});
+#endif
 	textureData->SetBackend(backend);
 }
 
